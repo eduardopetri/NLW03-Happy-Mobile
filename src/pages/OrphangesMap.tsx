@@ -1,12 +1,13 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState,  } from 'react';
 import { StyleSheet, Text, View, Dimensions, } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Feather } from '@expo/vector-icons';
-
 import mapMarker from '../images/mapMarker.png';
 import { RectButton } from 'react-native-gesture-handler';
 import api from '../services/api';
+import { Context } from '../contexts/LocationContext';
+import Loading from '../components/Loading';
 
 interface Orphanage {
   id: number;
@@ -17,6 +18,7 @@ interface Orphanage {
 
 export default function OrphanagesMap() {
 
+  const currentLocation = useContext(Context)
   const navigation = useNavigation();
 
   const [orphanages, setOrphanages] = useState<Orphanage[]>([]);
@@ -35,14 +37,19 @@ export default function OrphanagesMap() {
   function handleNavigateToCreateOrphanage() {
     navigation.navigate('SelectMapPosition');
   }
+  if (!currentLocation.latitude) {
+    return (
+      <Loading />
+    )
+  }
   return (
     <View style={styles.container}>
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         initialRegion={{
-          latitude: -26.9042689,
-          longitude: -49.1205268,
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
           latitudeDelta: 0.008,
           longitudeDelta: 0.008,
         }}
@@ -90,6 +97,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+
   map: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,

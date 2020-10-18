@@ -5,6 +5,7 @@ import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import api from '../../services/api';
+import Loading from '../../components/Loading';
 
 interface OrphanageDataRouteParams {
   position: {
@@ -16,9 +17,9 @@ interface OrphanageDataRouteParams {
 export default function OrphanageData() {
   const navigation = useNavigation();
 
+  const [loading, setLoading] = useState(false); 
   const route = useRoute();
   const params = route.params as OrphanageDataRouteParams;
-
   const [name, setName] = useState('');
   const [about, setAbout] = useState('');
   const [instructions, setInstructions] = useState('');
@@ -27,6 +28,7 @@ export default function OrphanageData() {
   const [images, setImages] = useState<string[]>([]);
 
   async function handleCreateOrphanage() {
+    setLoading(true)
     const { latitude, longitude } = params.position;
 
     const data = new FormData();
@@ -48,7 +50,7 @@ export default function OrphanageData() {
     });
 
     await api.post('orphanages', data);
-
+    setLoading(false)
     navigation.navigate('OrphanagesMap');
   }
 
@@ -74,7 +76,9 @@ export default function OrphanageData() {
   }
 
 
-
+  if (loading) {
+    <Loading />
+  }
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ padding: 24 }}>

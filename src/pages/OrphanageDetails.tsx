@@ -7,6 +7,7 @@ import { RectButton, TouchableOpacity } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 
 import api from '../services/api';
+import Loading from '../components/Loading';
 
 interface OrphanageDetailsRouteParams {
   id: number;
@@ -41,9 +42,7 @@ export default function OrphanageDetails() {
 
   if (!orphanage) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.description}>Carregando...</Text>
-      </View>
+      <Loading />
     )
   }
 
@@ -53,6 +52,7 @@ export default function OrphanageDetails() {
 
   return (
     <ScrollView style={styles.container}>
+      {orphanage.images.length !== 0 && (
       <View style={styles.imagesContainer}>
         <ScrollView horizontal pagingEnabled>
           {orphanage.images.map(image => {
@@ -66,6 +66,7 @@ export default function OrphanageDetails() {
           })}
         </ScrollView>
       </View>
+      )}
 
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{orphanage.name}</Text>

@@ -1,12 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
-import { Feather } from '@expo/vector-icons';
-import mapMarker from './src/images/mapMarker.png';
+ import React,{useContext} from 'react';
+
 import { useFonts } from 'expo-font';
 import { Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
 import Routes from './src/routes';
+import LocationContext from './src/contexts/LocationContext';
+
+
 export default function App() {
 
   const [fontsLoaded] = useFonts({
@@ -19,6 +18,8 @@ export default function App() {
     return null
   }
   return (
-    <Routes />
+    <LocationContext>
+      <Routes />
+    </LocationContext>
   );
 }
